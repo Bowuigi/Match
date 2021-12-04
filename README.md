@@ -1,8 +1,8 @@
 # Match
 
-Simple (and tiny) pattern matching library in C99 inspired by the Lua string replacement library
+Simple (and tiny) pattern matching library in POSIX C99 inspired by the Lua string replacement library.
 
-It is all on a single header, just drop it on your project and include it
+It is all on a single header and C source, just drop it on your project and include it
 
 Description
 -----------

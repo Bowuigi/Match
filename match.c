@@ -27,7 +27,7 @@ struct Match_State Match_ParsePattern(const char *pattern) {
 		chars[i].type = M_EXACT;
 
 		if (nextIsSpecial) {
-			switch (*pattern) {
+			switch (tolower(*pattern)) {
 				case 'a':
 					chars[i].type = M_ANY;
 					break;
@@ -116,26 +116,48 @@ void Match_PrintPattern(struct Match_State S) {
 bool Match_String(char *pattern, char *string) {
 	struct Match_State S = Match_ParsePattern(pattern);
 
-	bool matches=true;
-	for (size_t i=0; i<sizeof(string)-sizeof(string[0]); i++) {
-		switch (S.c[i].type) {
-			case M_ANY      : matches = true; break;
-			case M_ALPHANUM : matches = isalnum(string[i])      ; break;
-			case M_LETTER   : matches = isalpha(string[i])      ; break;
-			case M_NUM      : matches = isdigit(string[i])      ; break;
-			case M_PUNCT    : matches = ispunct(string[i])      ; break;
-			case M_SPACE    : matches = isspace(string[i])      ; break;
-			case M_UPPER    : matches = isupper(string[i])      ; break;
-			case M_HEX      : matches = isxdigit(string[i])     ; break;
-			case M_EXACT    : matches = (S.c[i].c == string[i]) ; break;
+	size_t str_len = strlen(string);
+	size_t pat_len = S.length;
+
+	bool matches = true;
+	bool skip_char = false;
+
+	size_t str_i = 0;
+	size_t pat_i = 0;
+
+	for (; str_i < str_len; str_i++, skip_char = false) {
+		switch (S.c[pat_i].type) {
+			case M_ANY      : matches = true                            ; break ;
+			case M_ALPHANUM : matches = isalnum(string[str_i])          ; break ;
+			case M_LETTER   : matches = isalpha(string[str_i])          ; break ;
+			case M_NUM      : matches = isdigit(string[str_i])          ; break ;
+			case M_PUNCT    : matches = ispunct(string[str_i])          ; break ;
+			case M_SPACE    : matches = isspace(string[str_i])          ; break ;
+			case M_UPPER    : matches = isupper(string[str_i])          ; break ;
+			case M_HEX      : matches = isxdigit(string[str_i])         ; break ;
+			case M_EXACT    : matches = (S.c[pat_i].c == string[str_i]) ; break ;
+		}
+
+		if (S.c[pat_i].isUpper && S.c[pat_i].type != M_EXACT) matches = !matches;
+
+		if (matches == true && pat_i >= pat_len - 1) {
+			Match_DeleteState(&S);
+			return true;
 		}
 
 		if (matches == false) {
-			Match_DeleteState(&S);
-			return false;
+			if (pat_i == 0) {
+				skip_char = true;
+				continue;
+			} else {
+				Match_DeleteState(&S);
+				return false;
+			}
 		}
+
+		if (skip_char == false) pat_i++;
 	}
 
 	Match_DeleteState(&S);
-	return true;
+	return false;
 }
