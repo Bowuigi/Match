@@ -88,6 +88,7 @@ struct Match_Char {
 	enum Match_Type type;
 	bool isUpper;
 	char c;
+	size_t n;
 };
 
 struct Match_State {

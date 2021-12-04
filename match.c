@@ -27,6 +27,11 @@ struct Match_State Match_ParsePattern(const char *pattern) {
 		chars[i].type = M_EXACT;
 
 		if (nextIsSpecial) {
+			char repeat[3];
+			while (isdigit(*pattern)) {
+				repeat[]=*pattern;
+			}
+
 			switch (tolower(*pattern)) {
 				case 'a':
 					chars[i].type = M_ANY;
@@ -140,9 +145,13 @@ bool Match_String(char *pattern, char *string) {
 
 		if (S.c[pat_i].isUpper && S.c[pat_i].type != M_EXACT) matches = !matches;
 
-		if (matches == true && pat_i >= pat_len - 1) {
-			Match_DeleteState(&S);
-			return true;
+		if (matches == true) {
+			if (pat_i >= pat_len - 1) {
+				Match_DeleteState(&S);
+				return true;
+			}
+			S.c[pat_i].n--;
+			if (S.c[pat_i].n > 0) skip_char = true;
 		}
 
 		if (matches == false) {
