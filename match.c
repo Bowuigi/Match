@@ -171,12 +171,8 @@ bool Match_String(char *pattern, char *string) {
 		}
 
 		if (matches == false) {
-			if (pat_i == 0) {
-				skip_char = true;
-				continue;
-			} else {
-				break;
-			}
+			skip_char = true;
+			pat_i = 0;
 		}
 
 		if (skip_char == false) pat_i++;

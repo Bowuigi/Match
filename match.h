@@ -67,7 +67,7 @@ extern "C" {
 #include <ctype.h>
 
 #define MATCH_ERR(cond, msg) \
-	if (cond==true) {        \
+	if ((cond)==true) {        \
 		fprintf(stderr, "Match, fatal: %s", msg); \
 		exit(1);             \
 	}

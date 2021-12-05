@@ -17,33 +17,3 @@ int main() {
 	TEST_MATCH("%2a", "t");
 }
 
-/*
-Pattern '1234'
-String '1234'
-Matches? 1
-
-Pattern '1234'
-String '12345678'
-Matches? 1
-
-Pattern '1234'
-String '012345678'
-Matches? 0
-
-Pattern '%a%a%a%a%a world'
-String 'hello world'
-Matches? 1
-
-Pattern '%n%n%n%n'
-String '1234'
-Matches? 0
-
-Pattern '%x'
-String 'abcdef1234'
-Matches? 0
-
-Pattern '%p%p%p%p'
-String '.,;:'
-Matches? 0
-
-*/
