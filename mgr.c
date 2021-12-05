@@ -4,7 +4,7 @@
 int main(int argc, char **argv) {
 	switch (argc-1) {
 		case 0:
-			puts("mgrep, search files or stdin using Match patterns");
+			puts("mgrep, search files or stdin using Bowuigi/Match patterns");
 			break;
 		case 1: {
 			char *line;
