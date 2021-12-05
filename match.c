@@ -161,7 +161,7 @@ bool Match_String(char *pattern, char *string) {
 		if (str_i >= str_len - 1 && S.c[pat_i].n > 1) break;
 
 		if (matches == true) {
-			if (pat_i >= pat_len - 1) {
+			if (pat_i >= pat_len - 1 && S.c[pat_i].n == 0) {
 				Match_DeleteState(&S);
 				return true;
 			}
