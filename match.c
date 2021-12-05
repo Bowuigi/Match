@@ -14,7 +14,7 @@ struct Match_State Match_ParsePattern(const char *pattern) {
 			size *= 2;
 			chars = realloc(chars, size*sizeof(struct Match_Char));
 
-			MATCH_ERR(chars==NULL,"Out of memory");
+			MATCH_ERR(chars==NULL,"Out of memory")
 		}
 		chars[i].isUpper = isupper(*pattern);
 
@@ -25,11 +25,24 @@ struct Match_State Match_ParsePattern(const char *pattern) {
 		}
 
 		chars[i].type = M_EXACT;
+		chars[i].n = 1;
 
 		if (nextIsSpecial) {
-			char repeat[3];
+			char repeat[4] = {0};
+			size_t n = 0;
+
 			while (isdigit(*pattern)) {
-				repeat[]=*pattern;
+				if (n < 4) {
+					repeat[n] = *pattern;
+					n++;
+				}
+				pattern++;
+			}
+
+			long num_times = strtol(repeat, NULL, 10);
+
+			if (num_times > 0) {
+				chars[i].n = num_times;
 			}
 
 			switch (tolower(*pattern)) {
@@ -145,11 +158,14 @@ bool Match_String(char *pattern, char *string) {
 
 		if (S.c[pat_i].isUpper && S.c[pat_i].type != M_EXACT) matches = !matches;
 
+		if (str_i >= str_len - 1 && S.c[pat_i].n > 1) break;
+
 		if (matches == true) {
 			if (pat_i >= pat_len - 1) {
 				Match_DeleteState(&S);
 				return true;
 			}
+
 			S.c[pat_i].n--;
 			if (S.c[pat_i].n > 0) skip_char = true;
 		}
@@ -159,8 +175,7 @@ bool Match_String(char *pattern, char *string) {
 				skip_char = true;
 				continue;
 			} else {
-				Match_DeleteState(&S);
-				return false;
+				break;
 			}
 		}
 

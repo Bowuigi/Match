@@ -26,6 +26,7 @@ If the token doesn't start with % then it is just a normal exact match
 
 If the token is %%, then it matches '%'
 
+If there is a number between the '%' and the token, it is taken as the amount of times to natch it, for example, "%4n" would match four numbers like "1234"
 Usage
 -----
 

@@ -1,7 +1,7 @@
 #include "match.h"
 #include <stdio.h>
 
-#define TEST_MATCH(pattern, string) printf("Pattern '%s'\nString '%s'\nMatches? %i\n\n", pattern, string, Match_String(pattern, string));
+#define TEST_MATCH(pattern, string) printf("Pattern '%s'\nString '%s'\nMatches? %i\n\n", pattern, string, Match_String(pattern, string))
 
 int main() {
 	TEST_MATCH("1234", "1234");
@@ -13,6 +13,8 @@ int main() {
 	TEST_MATCH("%p%p%p%p", ".,;:");
 	TEST_MATCH("WRONG", "RIGHT");
 	TEST_MATCH("%A", "that should fail on any condition");
+	TEST_MATCH("%5a", "should match five chars");
+	TEST_MATCH("%2a", "t");
 }
 
 /*
