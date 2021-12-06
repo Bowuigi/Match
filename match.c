@@ -35,13 +35,19 @@ struct Match_State Match_ParsePattern(const char *pattern) {
 
 	while (*pattern) {
 		if (i>size) {
-
 			size *= 2;
 			chars = realloc(chars, size*sizeof(struct Match_Char));
 
 			MATCH_ERR(chars==NULL,"Out of memory")
 		}
+
+		if (*pattern == '_') {
+			pattern++;
+			continue;
+		}
+
 		chars[i].isUpper = isupper(*pattern);
+		chars[i].c = 0;
 
 		if (*pattern =='%' && !nextIsSpecial) {
 			nextIsSpecial = true;
